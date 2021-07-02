@@ -118,30 +118,3 @@ class CreateNewPasswordSerializer(serializers.Serializer):
         user = User.objects.get(activation_code=code)
         user.set_password(password)
         user.save()
-
-
-# class ChangePasswordSerializer(serializers.Serializer):
-#
-#     old_password = serializers.CharField(required=True)
-#     new_password = serializers.CharField(min_length=6, required=True)
-#     new_password_confirm = serializers.CharField(min_length=6, required=True)
-#
-#     def validate_old_password(self, password):
-#         request = self.context.get('request')
-#         if not request.user.check_password(password):
-#             raise serializers.ValidationError('Введён неверный парол')
-#         return password
-#
-#     def validate(self, attrs):
-#         password = self.validated_data.get('new_password')
-#         password_confirm = self.validate_old_password.get('new_password_confirm')
-#         if password != password_confirm:
-#             raise serializers.ValidationError('Пароли не совпадают!')
-#         return attrs
-#
-#     def set_new_password(self):
-#         request = self.context.get('request')
-#         new_password = self.validated_data.get('new_password')
-#         user = request.user
-#         user.set_password(new_password)
-#         user.save()

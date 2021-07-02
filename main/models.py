@@ -41,34 +41,19 @@ class Review(models.Model):
         unique_together = ['author', 'product']
 
 
-class StatusChoices(models.TextChoices):
-
-    new = ('new', 'Новый')
-    done = ('done', 'выполнен')
-    canceled = ('canceled', 'отменён')
-
-
-class Order(models.Model):
-
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='orders')
-    products = models.ManyToManyField(Product, through='OrderItems')
-    status = models.CharField(max_length=25, choices=StatusChoices.choices)
-    total_sum = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class OrderItems(models.Model):
-
-    order = models.ForeignKey(Order, on_delete=models.DO_NOTHING, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name='order_items')
-    qt = models.PositiveIntegerField(default=1)
-
-    class Meta:
-        unique_together = ['order', 'product']  # это запрет для повторного добавление
-
-
 class LikeList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='likes')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='likes')
     is_liked = models.BooleanField(default=False)
 
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorite')
+    favorite = models.BooleanField(default=False)
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart')
+    add = models.BooleanField(default=False)
